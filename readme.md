@@ -6,7 +6,7 @@ Este repositorio contiene trabajos prácticos realizados en el marco de la Maest
 
 ## Disclaimer (Español)
 
-Este repositorio contiene trabajos prácticos realizados en el marco de mi formación en la **Maestría en Microelectrónica** en la Universidad de Buenos Aires. Todo el contenido aquí publicado tiene fines **académicos y de estudio**, y representa mi trabajo personal como estudiante.
+Este repositorio contiene trabajos prácticos realizados en el marco de la formación en la **Maestría en Microelectrónica** en la Universidad de Buenos Aires. Todo el contenido aquí publicado tiene fines **académicos y de estudio**, y representa trabajo personal como estudiante.
 
 🔹 **Importante:**
 
@@ -23,7 +23,7 @@ Podés utilizar este material como guía de estudio, siempre y cuando se manteng
 
 ## Disclaimer (English)
 
-This repository contains coursework developed as part of my studies in the **Master's Program in Microelectronics** at the University of Buenos Aires. All content is shared for **educational and academic purposes only**, and reflects my individual work as a student.
+This repository contains coursework developed as part of the studies in the **Master's Program in Microelectronics** at the University of Buenos Aires. All content is shared for **educational and academic purposes only**, and reflects work as a student.
 
 🔹 **Important Notes:**
 
