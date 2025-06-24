@@ -1,3 +1,0 @@
-### Calificaciones y Correcciones: 
-
-- Galdeman 

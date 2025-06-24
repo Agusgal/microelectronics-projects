@@ -1,0 +1,124 @@
+module fir (
+    input wire rst,
+    input wire clk,
+    input wire signed [15:0] x,
+    input wire x_new,
+    output reg signed [15:0] y,
+    output reg y_new
+);
+
+    reg started;
+    reg [3:0] counter;
+    reg signed [15:0] h_k;
+    reg signed [15:0] fifo_x [15:0];
+    integer i;
+
+    wire signed [31:0] mul;
+    wire signed [39:0] add;
+    reg  signed [39:0] acc;
+    reg  signed [39:0] acc_out;
+    reg output_ready;
+
+    // LUT de coeficientes Q1.15
+    always @(*) begin
+        case (counter)
+            4'd0 :  h_k = -16'sd2252;
+            4'd1 :  h_k = -16'sd1122;
+            4'd2 :  h_k =  16'sd11767;
+            4'd3 :  h_k = -16'sd2078;
+            4'd4 :  h_k = -16'sd19172;
+            4'd5 :  h_k = -16'sd29478;
+            4'd6 :  h_k = -16'sd24139;
+            4'd7 :  h_k = -16'sd31030;
+            4'd8 :  h_k = -16'sd8972;
+            4'd9 :  h_k = -16'sd10017;
+            4'd10:  h_k =  16'sd26389;
+            4'd11:  h_k = -16'sd28439;
+            4'd12:  h_k =  16'sd5401;
+            4'd13:  h_k = -16'sd20942;
+            4'd14:  h_k = -16'sd13089;
+            4'd15:  h_k = -16'sd29834;
+            default: h_k = 16'sd0;
+        endcase
+    end
+
+    // Contador de convolución
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            counter <= 4'd0;
+            started <= 1'b0;
+        end else begin
+            if (x_new && !started) begin
+                counter <= 4'd0;
+                started <= 1'b1;
+            end else if (started) begin
+                counter <= counter + 1;
+                if (counter == 4'd15)
+                    started <= 1'b0;
+            end
+        end
+    end
+
+    // FIFO de muestras (shifting explícito)
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            for (i=0;i<16;i=i+1)
+                fifo_x[i] <= 16'd0;
+        end else if (x_new) begin
+            fifo_x[15] <= fifo_x[14];
+            fifo_x[14] <= fifo_x[13];
+            fifo_x[13] <= fifo_x[12];
+            fifo_x[12] <= fifo_x[11];
+            fifo_x[11] <= fifo_x[10];
+            fifo_x[10] <= fifo_x[9];
+            fifo_x[9]  <= fifo_x[8];
+            fifo_x[8]  <= fifo_x[7];
+            fifo_x[7]  <= fifo_x[6];
+            fifo_x[6]  <= fifo_x[5];
+            fifo_x[5]  <= fifo_x[4];
+            fifo_x[4]  <= fifo_x[3];
+            fifo_x[3]  <= fifo_x[2];
+            fifo_x[2]  <= fifo_x[1];
+            fifo_x[1]  <= fifo_x[0];
+            fifo_x[0]  <= x;
+        end
+    end
+
+    assign mul = $signed(h_k) * $signed(fifo_x[counter]);
+    assign add = acc + mul;
+
+    // Acumulador
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            acc <= 40'd0;
+        else if (counter == 4'd0)
+            acc <= mul;
+        else
+            acc <= add;
+    end
+
+    // Lógica de salida
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            acc_out <= 40'd0;
+            output_ready <= 1'b0;
+            y <= 16'd0;
+            y_new <= 1'b0;
+        end else begin
+            if (counter == 4'd15) begin
+                acc_out <= add;
+                output_ready <= 1'b1;
+            end else begin
+                output_ready <= 1'b0;
+            end
+
+            if (output_ready) begin
+                y <= acc_out[30:15]; // Q1.15: truncar y escalar
+                y_new <= 1'b1;
+            end else begin
+                y_new <= 1'b0;
+            end
+        end
+    end
+
+endmodule
