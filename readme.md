@@ -1,6 +1,7 @@
-# Repositorio de Trabajos Prácticos – Maestría en Microelectrónica
+# Assignments and Projects – M. Eng. in Microelectronics
 
-Este repositorio contiene trabajos prácticos realizados en el marco de la Maestría en Microelectrónica en la Universidad de Buenos Aires. Su propósito es compartir conocimientos, facilitar el estudio y servir como referencia para otros estudiantes.
+
+This repository contains coursework and practical assignments completed as part of the Master of Engineering in Microelectronics at the University of Buenos Aires. Its purpose is to share knowledge, facilitate learning, and serve as a reference for other students.
 
 ---
 
